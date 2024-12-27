@@ -1,0 +1,37 @@
+:root {
+    --icon-url: 'none';
+    /* Colors */
+    --v-primary: theme('colors.primary');
+    --v-primary-rgb: 1, 109, 250;
+    --v-primary-darker: hsl(from var(--v-primary) h s calc(l - 10));
+    --v-primary-darkest: hsl(from var(--v-primary) h s calc(l - 15));
+    --v-primary-lighter: hsl(from var(--v-primary) h s calc(l + 10));
+    --v-primary-lightest: hsl(from var(--v-primary) h s calc(l + 15));
+    --v-secondary: theme('colors.secondary');
+    --v-secondary-rgb: 96, 107, 133;
+    --v-secondary-darker: hsl(from var(--v-secondary) h s calc(l - 10));
+    --v-secondary-darkest: hsl(from var(--v-secondary) h s calc(l - 15));
+    --v-secondary-lighter: hsl(from var(--v-secondary) h s calc(l + 10));
+    --v-secondary-lightest: hsl(from var(--v-secondary) h s calc(l + 15));
+    --v-natural: theme('colors.natural');
+    --v-natural-rgb: 225, 227, 234;
+    --v-natural-darker: hsl(from var(--v-natural) h s calc(l - 5));
+    --v-natural-darkest: hsl(from var(--v-natural) h s calc(l - 10));
+    --v-natural-lighter: hsl(from var(--v-natural) h s calc(l + 5));
+    --v-natural-lightest: hsl(from var(--v-natural) h s calc(l + 10));
+    --v-danger: theme('colors.danger');
+    --v-danger-rgb: 199, 35, 35;
+    --v-danger-darker: hsl(from var(--v-danger) h s calc(l - 5));
+    --v-danger-darkest: hsl(from var(--v-danger) h s calc(l - 10));
+    --v-danger-lighter: hsl(from var(--v-danger) h s calc(l + 5));
+    --v-danger-lightest: hsl(from var(--v-danger) h s calc(l + 10));
+    --v-success: theme('colors.success');
+    --v-success-rgb: 19, 176, 83;
+    --v-success-darker: hsl(from var(--v-success) h s calc(l - 5));
+    --v-success-darkest: hsl(from var(--v-success) h s calc(l - 10));
+    --v-success-lighter: hsl(from var(--v-success) h s calc(l + 5));
+    --v-success-lightest: hsl(from var(--v-success) h s calc(l + 10));
+    /* Layout */
+    --header-height: 80px;
+    --footer-height: 44px;
+}
