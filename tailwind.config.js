@@ -3,7 +3,7 @@ export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     colors: {
-      primary: '#036672',
+      primary: '#1a56db',
       secondary: '#606B85',
       warning: '#faca15',
       danger: '#c81e1e',

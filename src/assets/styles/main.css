@@ -1,5 +1,6 @@
 @import "reset.css";
 @import "variable.css";
+@import "base.css";
 
 @tailwind base;
 @tailwind components;
@@ -9,8 +10,52 @@ body {
     .safe-area {
         width: 100%;
         max-width: 768px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background-color: white;
+        margin: auto;
     }
+
+    .bottom-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+    }
+
+    .top-fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+    }
+
+    .section {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1rem;
+
+        &-responsive {
+            @screen sm {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    }
+}
+
+section {
+    padding: theme('spacing.6');
+
+    h2 {
+        font-size: theme('fontSize.xl');
+        font-weight: theme('fontWeight.bold');
+        margin-bottom: theme('spacing.4');
+    }
+}
+
+.box {
+    background: white;
+    padding: theme('spacing.4');
+    border-radius: theme('borderRadius.lg');
+    box-shadow: theme('boxShadow.md');
+    width: 100%;
 }
