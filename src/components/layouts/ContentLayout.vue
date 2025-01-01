@@ -15,6 +15,7 @@ import NavBar from '@/components/navigations/NavBar.vue'
   min-height: 100vh;
   flex-direction: column;
   overflow-y: auto;
+  padding-bottom: 76px;
 }
 
 .content-main {

@@ -3,44 +3,51 @@
     <section class="dashboard">
       <div class="user-info mb-4">
         <h1 class="text-3xl font-extrabold">의정부역점</h1>
-        <Icon :icon="SettingIcon" />
+        <button class="btn btn-ghost">
+          <Icon :icon="SettingIcon" />
+        </button>
       </div>
       <ul class="box stats">
         <li>
           <p class="mb-2">최근주문</p>
-          <router-link to="/order" class="text-2xl font-bold text-primary underline">
-            123 건
+          <router-link
+            to="/order"
+            class="text-lg font-bold text-primary underline text-nowrap sm:text-2xl"
+          >
+            12 건
           </router-link>
         </li>
         <li>
           <p class="mb-2">배송중</p>
-          <router-link to="/order" class="text-2xl font-bold text-primary underline">
+          <router-link
+            to="/order"
+            class="text-lg font-bold text-primary underline text-nowrap sm:text-2xl"
+          >
             4 건
           </router-link>
         </li>
         <li>
           <p class="mb-2">주문 총액</p>
-          <span class="text-2xl font-bold">1,232,000 원</span>
+          <span class="text-lg font-bold text-nowrap sm:text-2xl">123,200 원</span>
         </li>
       </ul>
     </section>
     <section class="product-list">
       <div class="notice-list-wrap mb-4">
         <h2>공지사항</h2>
-        <!--vertical list of notice with title, description and uploaded date-->
         <ul class="notice-list mb-4">
           <li class="notice-item">
-            <div class="notice-item-header">
+            <router-link to="/notice/1" class="notice-item-header">
               <h3 class="text-lg font-semibold">공지사항 제목</h3>
               <p class="text-sm text-gray-400">16분전</p>
-            </div>
+            </router-link>
             <p class="notice-item-content">공지사항 내용</p>
           </li>
           <li class="notice-item">
-            <div class="notice-item-header">
+            <router-link to="/notice/1" class="notice-item-header">
               <h3 class="text-lg font-semibold">공지사항 제목</h3>
               <p class="text-sm text-gray-400">3일전</p>
-            </div>
+            </router-link>
             <p class="notice-item-content">공지사항 내용</p>
           </li>
         </ul>
@@ -53,9 +60,21 @@
 
       <h2>상품 목록</h2>
       <div class="section section-responsive">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
+        <div class="relative w-full">
+          <ProductCardItem />
+        </div>
+        <div class="relative w-full">
+          <ProductCardItem />
+        </div>
+        <div class="relative w-full">
+          <ProductCardItem />
+        </div>
+        <div class="relative w-full">
+          <ProductCardItem />
+        </div>
+        <div class="relative w-full">
+          <ProductCardItem />
+        </div>
       </div>
     </section>
   </ContentLayout>
@@ -64,6 +83,7 @@
 import ContentLayout from '@/components/layouts/ContentLayout.vue'
 import Icon from '@/components/display/Icon.vue'
 import SettingIcon from '@/assets/icons/Setting.svg'
+import ProductCardItem from '@/components/ProductCardItem.vue'
 </script>
 <style scoped>
 .dashboard {
@@ -88,7 +108,6 @@ import SettingIcon from '@/assets/icons/Setting.svg'
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
   padding: 1rem;
   background-color: white;
   border-radius: theme('borderRadius.lg');
@@ -108,7 +127,7 @@ import SettingIcon from '@/assets/icons/Setting.svg'
   }
 
   li:not(:last-child) {
-    border-right: 1px solid theme('colors.gray.200');
+    border-right: 2px solid theme('colors.gray.100');
   }
 }
 
