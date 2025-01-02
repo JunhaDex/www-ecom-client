@@ -2,7 +2,7 @@
   <ContentLayout>
     <section class="dashboard">
       <div class="user-info mb-4">
-        <h1 class="text-3xl font-extrabold">의정부역점</h1>
+        <h1 class="text-3xl font-extrabold">{{ authStore.user?.branchName ?? '지점명' }}</h1>
         <button class="btn btn-ghost">
           <Icon :icon="SettingIcon" />
         </button>
@@ -14,7 +14,7 @@
             to="/order"
             class="text-lg font-bold text-primary underline text-nowrap sm:text-2xl"
           >
-            12 건
+            {{ dashInfo.count }} 건
           </router-link>
         </li>
         <li>
@@ -23,12 +23,12 @@
             to="/order"
             class="text-lg font-bold text-primary underline text-nowrap sm:text-2xl"
           >
-            4 건
+            {{ dashInfo.in_transit }} 건
           </router-link>
         </li>
         <li>
           <p class="mb-2">주문 총액</p>
-          <span class="text-lg font-bold text-nowrap sm:text-2xl">123,200 원</span>
+          <span class="text-lg font-bold text-nowrap sm:text-2xl">{{ dashInfo.cost }} 원</span>
         </li>
       </ul>
     </section>
@@ -36,19 +36,12 @@
       <div class="notice-list-wrap mb-4">
         <h2>공지사항</h2>
         <ul class="notice-list mb-4">
-          <li class="notice-item">
-            <router-link to="/notice/1" class="notice-item-header">
-              <h3 class="text-lg font-semibold">공지사항 제목</h3>
-              <p class="text-sm text-gray-400">16분전</p>
+          <li v-for="noti in noticeList" class="notice-item" :key="noti.id">
+            <router-link :to="`/notice/${noti.id}`" class="notice-item-header">
+              <h3 class="text-lg font-semibold">{{ noti.title }}</h3>
+              <p class="text-sm text-gray-400">{{ tts(noti.createdAt) }}</p>
             </router-link>
-            <p class="notice-item-content">공지사항 내용</p>
-          </li>
-          <li class="notice-item">
-            <router-link to="/notice/1" class="notice-item-header">
-              <h3 class="text-lg font-semibold">공지사항 제목</h3>
-              <p class="text-sm text-gray-400">3일전</p>
-            </router-link>
-            <p class="notice-item-content">공지사항 내용</p>
+            <p class="notice-item-content">{{ summarizeContent(noti.content) }}</p>
           </li>
         </ul>
         <div class="text-center">
@@ -60,20 +53,8 @@
 
       <h2>상품 목록</h2>
       <div class="section section-responsive">
-        <div class="relative w-full">
-          <ProductCardItem />
-        </div>
-        <div class="relative w-full">
-          <ProductCardItem />
-        </div>
-        <div class="relative w-full">
-          <ProductCardItem />
-        </div>
-        <div class="relative w-full">
-          <ProductCardItem />
-        </div>
-        <div class="relative w-full">
-          <ProductCardItem />
+        <div v-for="product in productPage.list" class="relative w-full" :key="product.id">
+          <ProductCardItem :product="product" />
         </div>
       </div>
     </section>
@@ -84,6 +65,43 @@ import ContentLayout from '@/components/layouts/ContentLayout.vue'
 import Icon from '@/components/display/Icon.vue'
 import SettingIcon from '@/assets/icons/Setting.svg'
 import ProductCardItem from '@/components/ProductCardItem.vue'
+import { onMounted, ref } from 'vue'
+import type { PaginatedResponse } from '@/types/ui.type'
+import type { Dashboard, Notice, Product } from '@/types/service.type'
+import { TransactionService } from '@/services/transaction.service'
+import { NoticeService } from '@/services/notice.service'
+import { ProductService } from '@/services/product.service'
+import { useAuthStore } from '@/stores/auth.store'
+import { summarizeContent, tts } from '../utils/index.util'
+
+const authStore = useAuthStore()
+const txSvc = new TransactionService()
+const noticeSvc = new NoticeService()
+const productSvc = new ProductService()
+const dashInfo = ref<Dashboard>({
+  count: 0,
+  cost: 0,
+  in_transit: 0,
+})
+
+const noticeList = ref<Notice[]>([])
+
+const productPage = ref<PaginatedResponse<Product>>({
+  list: [],
+  meta: {
+    totalCount: 0,
+    pageNo: 1,
+    pageSize: 10,
+    totalPage: 10,
+  },
+})
+
+onMounted(async () => {
+  dashInfo.value = await txSvc.getDashboard()
+  const res = await noticeSvc.listNotice({ size: 5 })
+  noticeList.value = res.list
+  productPage.value = await productSvc.listProduct()
+})
 </script>
 <style scoped>
 .dashboard {
