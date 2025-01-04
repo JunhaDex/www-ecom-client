@@ -44,9 +44,17 @@ const router = createRouter({
             },
             {
               path: 'checkout',
-              name: 'checkout',
-              component: () => import('@/pages/item/checkout/Index.vue'),
               children: [
+                {
+                  path: '',
+                  name: 'checkout',
+                  component: () => import('@/pages/item/checkout/Index.vue'),
+                },
+                {
+                  path: 'process',
+                  name: 'checkout-process',
+                  component: () => import('@/pages/item/checkout/Process.vue'),
+                },
                 {
                   path: 'success',
                   name: 'checkout-success',

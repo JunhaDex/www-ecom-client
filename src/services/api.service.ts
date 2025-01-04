@@ -14,21 +14,21 @@ export abstract class ApiService {
         'Content-Type': 'application/json',
       },
     })
-    // this.client.interceptors.response.use(
-    //   (res) => {
-    //     return res
-    //   },
-    //   (err) => {
-    //     if (err.response.status === 401) {
-    //       window.alert('만료된 인증정보 입니다.')
-    //       this.fallbackAuth()
-    //     } else if (err.response.status === 500) {
-    //       // this.authStore.circuitBreak = true
-    //       window.location.href = '/error'
-    //     }
-    //     return Promise.reject(err)
-    //   },
-    // )
+    this.client.interceptors.response.use(
+      (res) => {
+        return res
+      },
+      (err) => {
+        if (err.response.status === 401) {
+          window.alert('로그인이 만료되었습니다. 재로그인 해 주세요.')
+          this.fallbackAuth()
+        } else if (err.response.status === 500) {
+          // this.authStore.circuitBreak = true
+          window.location.href = '/error'
+        }
+        return Promise.reject(err)
+      },
+    )
   }
 
   auth(): this {
@@ -44,8 +44,8 @@ export abstract class ApiService {
     return res.data.result
   }
 
-  // fallbackAuth() {
-  //   this.authStore.setJwt('')
-  //   window.location.href = '/login'
-  // }
+  fallbackAuth() {
+    this.authStore.invalidate()
+    window.location.href = '/login'
+  }
 }

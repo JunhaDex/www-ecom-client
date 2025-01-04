@@ -15,12 +15,13 @@
 <script setup lang="ts">
 import type { Product } from '@/types/service.type'
 import { computed } from 'vue'
+import { localizePrice } from '@/utils/index.util'
 
 const props = defineProps<{
   product: Product
 }>()
 
-const priceStr = computed(() => props.product.productPrice.toLocaleString('en-US'))
+const priceStr = computed(() => localizePrice(props.product.productPrice))
 </script>
 <style scoped>
 .card-item-box {

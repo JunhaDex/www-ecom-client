@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-layout">
+  <div class="auth-layout bg-gray-100">
     <main class="auth-content">
       <slot />
     </main>
@@ -14,7 +14,6 @@ import Footer from '@/components/layouts/Footer.vue'
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  background-color: theme('colors.gray.100');
 }
 
 .auth-content {

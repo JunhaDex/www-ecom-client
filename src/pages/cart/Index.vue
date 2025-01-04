@@ -4,30 +4,22 @@
       <h2>장바구니</h2>
       <table class="cart-table mb-4">
         <tbody>
-          <tr>
-            <th class="p-2">
-              <input class="input-check" type="checkbox" />
-            </th>
-            <th class="text-left pl-4">상품 정보</th>
-            <th class="text-right">
-              <button class="btn btn-danger btn-sm">선택 삭제</button>
-            </th>
-          </tr>
-          <tr>
-            <td class="p-2">
-              <input class="input-check" type="checkbox" />
-            </td>
-            <td class="product-list">
-              <ProductListItem />
+          <tr v-for="(item, idx) in cartList.list" :key="item.id">
+            <td class="p-2 product-list">
+              <ProductListItem :product="item.product" />
             </td>
             <td class="p-2 count-column">
-              <CounterInput class="counter" :value="1" />
+              <CounterInput
+                class="counter"
+                :value="item.count"
+                @change-value="(newVal: number) => updateCount(idx, newVal)"
+              />
               <div class="counter-result">
                 <div class="subtotal">
                   <label>상품 합계</label> <br />
-                  <span class="text-danger">{{ subtotal }} 원</span>
+                  <span class="text-danger">{{ getSubtotal(idx) }} 원</span>
                 </div>
-                <button class="btn btn-danger btn-sm">삭제</button>
+                <button class="btn btn-danger btn-sm" @click="updateCount(idx, 0)">삭제</button>
               </div>
             </td>
           </tr>
@@ -36,7 +28,7 @@
       <ul class="checkout mb-2">
         <li>
           <label>총 상품금액</label>
-          <span>10,000 원</span>
+          <span>{{ localizePrice(grandTotal) }} 원</span>
         </li>
         <li>
           <label>배송비</label>
@@ -44,7 +36,7 @@
         </li>
         <li>
           <label>주문 총액</label>
-          <span>13,000 원</span>
+          <span>{{ localizePrice(grandTotal + 3000) }} 원</span>
         </li>
       </ul>
       <button class="btn btn-primary w-full" @click="checkoutItem">주문하기</button>
@@ -55,15 +47,69 @@
 import ContentLayout from '@/components/layouts/ContentLayout.vue'
 import CounterInput from '@/components/inputs/CounterInput.vue'
 import ProductListItem from '@/components/ProductListItem.vue'
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import type { CartItem } from '@/types/service.type'
+import type { PaginatedResponse } from '@/types/ui.type'
+import { ProductService } from '@/services/product.service'
+import { encodeCheckout, localizePrice } from '@/utils/index.util'
+import { useAuthStore } from '@/stores/auth.store'
 
 const router = useRouter()
-const subtotal = ref(10000)
+const authStore = useAuthStore()
+const productSvc = new ProductService()
+const cartList = ref<PaginatedResponse<CartItem>>({
+  list: [],
+  meta: {
+    totalCount: 0,
+    pageNo: 1,
+    pageSize: 10,
+    totalPage: 10,
+  },
+})
+const grandTotal = computed(() => {
+  return cartList.value.list.reduce((acc, item) => {
+    return acc + item.product.productPrice * item.count
+  }, 0)
+})
+
+onMounted(async () => {
+  cartList.value = await productSvc.listCartItem()
+  console.log(cartList.value.list)
+})
 
 function checkoutItem() {
-  console.log('checkout')
-  router.push('/item/checkout')
+  const payload = encodeCheckout({
+    userId: authStore.user!.id,
+    list: cartList.value.list.map((itm) => {
+      return {
+        id: itm.id,
+        productId: itm.product.id,
+        count: itm.count,
+      }
+    }),
+  })
+  router.push('/item/checkout?data=' + payload)
+}
+
+function getSubtotal(idx: number): string {
+  const item = cartList.value.list[idx]
+  return localizePrice(item.product.productPrice * item.count)
+}
+
+async function updateCount(idx: number, count: number) {
+  if (count === 0) {
+    if (!window.confirm('장바구니에서 상품을 삭제하시겠습니까?')) return
+  }
+  const item = cartList.value.list[idx]
+  item.count = count
+  await productSvc.changeCartItem({
+    productId: item.product.id,
+    count,
+  })
+  if (count === 0) {
+    cartList.value.list.splice(idx, 1)
+  }
 }
 </script>
 <style scoped>

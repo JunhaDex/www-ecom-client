@@ -12,10 +12,15 @@ import { ref, watch } from 'vue'
 const props = defineProps<{
   value: number
 }>()
-defineEmits(['changeValue'])
+const emit = defineEmits(['changeValue'])
 const internalValue = ref(props.value)
 
 watch(internalValue, (newValue) => {
+  if (newValue < 0) {
+    window.alert('최소 수량은 1개입니다.')
+    internalValue.value = 1
+    emit('changeValue', 1)
+  }
   emit('changeValue', newValue)
 })
 

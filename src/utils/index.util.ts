@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import crypto from 'crypto-js'
+
+const ENCRYPTION_KEY = 'secret'
 
 export function tts(time: Date | string): string {
   const current = dayjs()
@@ -27,4 +30,23 @@ export function summarizeContent(htmlContent: string, length = 20): string {
   }
 
   return summary
+}
+
+export function localizePrice(price: number) {
+  return price.toLocaleString('en-US')
+}
+
+export function encodeCheckout(data: {
+  userId: number
+  list: { id?: number; productId: number; count: number }[]
+}) {
+  const str = JSON.stringify(data)
+  const enc = crypto.AES.encrypt(str, ENCRYPTION_KEY).toString()
+  return encodeURIComponent(enc)
+}
+
+export function decodeCheckout(encrypted: string) {
+  const pure = decodeURIComponent(encrypted)
+  const dec = crypto.AES.decrypt(pure, ENCRYPTION_KEY).toString(crypto.enc.Utf8)
+  return JSON.parse(dec)
 }

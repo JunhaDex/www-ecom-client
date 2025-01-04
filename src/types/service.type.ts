@@ -34,9 +34,20 @@ export interface Product {
   productPrice: number
 }
 
+export interface CartItem {
+  id: number
+  count: number
+  product: Product
+}
+
 export interface Notice {
   id: number
   title: string
   content: string
   createdAt: Date | string
+}
+
+export interface CartInput {
+  productId: number
+  count: number
 }
