@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import crypto from 'crypto-js'
+import { v4 as uuidv4 } from 'uuid'
 
 const ENCRYPTION_KEY = 'secret'
 
@@ -40,9 +41,14 @@ export function encodeCheckout(data: {
   userId: number
   list: { id?: number; productId: number; count: number }[]
 }) {
-  const str = JSON.stringify(data)
+  const str = JSON.stringify({ ...data })
   const enc = crypto.AES.encrypt(str, ENCRYPTION_KEY).toString()
   return encodeURIComponent(enc)
+}
+
+export function issueOrderId() {
+  const orderId = uuidv4()
+  return encodeURIComponent(orderId)
 }
 
 export function decodeCheckout(encrypted: string) {

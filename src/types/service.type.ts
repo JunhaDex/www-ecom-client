@@ -51,3 +51,31 @@ export interface CartInput {
   productId: number
   count: number
 }
+
+export interface CreateTxInput {
+  products: {
+    item: Product
+    quantity: number
+  }[]
+  payment: {
+    orderId: string
+    paidAmount: number
+    paidAt: Date
+  }
+  txName: string
+  txNote: string
+}
+
+export interface ConfirmTxInput {
+  orderId: string
+  paymentKey: string
+  amount: number
+}
+
+export interface UserAddress {
+  orderId: string
+  address: string
+  postalCode: string
+  recipientName: string
+  recipientPhone: string
+}

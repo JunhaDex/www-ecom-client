@@ -52,7 +52,7 @@ import { useRouter } from 'vue-router'
 import type { CartItem } from '@/types/service.type'
 import type { PaginatedResponse } from '@/types/ui.type'
 import { ProductService } from '@/services/product.service'
-import { encodeCheckout, localizePrice } from '@/utils/index.util'
+import { encodeCheckout, issueOrderId, localizePrice } from '@/utils/index.util'
 import { useAuthStore } from '@/stores/auth.store'
 
 const router = useRouter()
@@ -89,7 +89,8 @@ function checkoutItem() {
       }
     }),
   })
-  router.push('/item/checkout?data=' + payload)
+  const orderId = issueOrderId()
+  router.push(`/item/checkout?data=${payload}&oid=${orderId}`)
 }
 
 function getSubtotal(idx: number): string {

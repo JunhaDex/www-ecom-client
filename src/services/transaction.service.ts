@@ -1,5 +1,5 @@
 import { ApiService } from '@/services/api.service'
-import type { Dashboard } from '@/types/service.type'
+import type { ConfirmTxInput, CreateTxInput, Dashboard } from '@/types/service.type'
 
 export class TransactionService extends ApiService {
   constructor() {
@@ -11,14 +11,11 @@ export class TransactionService extends ApiService {
     return this.unpackRes(res) as Dashboard
   }
 
-  async initPaymentTx(amount: number): Promise<{ sessionId: string }> {
-    const res = await this.auth().client.post(
-      'session',
-      { amount },
-      {
-        baseURL: `${import.meta.env.VITE_API_BASE_URL}/payment`,
-      },
-    )
-    return this.unpackRes(res) as { sessionId: string }
+  async initPaymentTx(txInit: CreateTxInput): Promise<void> {
+    await this.auth().client.post('init', txInit)
+  }
+
+  async confirmPaymentTx(txConfirm: ConfirmTxInput): Promise<void> {
+    await this.auth().client.post('confirm', txConfirm)
   }
 }

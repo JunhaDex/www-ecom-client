@@ -37,4 +37,8 @@ export class ProductService extends ApiService {
   async changeCartItem(cartItem: CartInput): Promise<void> {
     await this.auth().client.put('cart', cartItem)
   }
+
+  async removeFromCart(productIds: number[]): Promise<void> {
+    await this.auth().client.post('cart/clear', { productIds })
+  }
 }

@@ -41,6 +41,7 @@
         <div class="input-wrap address mb-4">
           <label class="label label-lt">배송지 주소</label>
           <input
+            v-model="shipment.addr1"
             type="text"
             class="input"
             placeholder="주소 검색"
@@ -48,11 +49,17 @@
             readonly
             @click="openPostcodeModal"
           />
-          <input type="text" class="input" placeholder="상세 주소 입력" :disabled="!isCustom" />
+          <input
+            v-model="shipment.addr2"
+            type="text"
+            class="input"
+            placeholder="상세 주소 입력"
+            :disabled="!isCustom"
+          />
         </div>
         <div class="input-wrap address mb-4">
           <label class="label label-lt">배송 메모</label>
-          <textarea class="input" placeholder="배송 메모입력" />
+          <textarea v-model="txNote" class="input" placeholder="배송 메모입력" />
         </div>
         <h2>결제수단</h2>
         <div id="payment-method"></div>
@@ -90,17 +97,37 @@ import { ProductService } from '@/services/product.service'
 import type { CartItem } from '@/types/service.type'
 import { loadTossPayments, type TossPaymentsWidgets } from '@tosspayments/tosspayments-sdk'
 import { TransactionService } from '@/services/transaction.service'
+import { ShipmentService } from '@/services/shipment.service'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const productSvc = new ProductService()
 const txSvc = new TransactionService()
+const shipSvc = new ShipmentService()
 
 const products = ref<CartItem[]>([])
+const orderId = ref<string | null>()
 const grandTotal = computed(() => {
   return products.value.reduce((acc, cur) => {
     return acc + cur.product.productPrice * cur.count
   }, 0)
+})
+const shipment = ref<{
+  addr1: string
+  addr2: string
+  postalCode: string
+}>({
+  addr1: '',
+  addr2: '',
+  postalCode: '',
+})
+const txNote = ref<string>('')
+const txName = computed(() => {
+  const base = products.value[0].product.productName
+  if (products.value.length > 1) {
+    return `${base} 외 ${products.value.length - 1}건`
+  }
+  return base
 })
 const shipSelect = ref('prefilled')
 const isCustom = computed(() => shipSelect.value === 'custom')
@@ -116,9 +143,11 @@ watch(
 const address = ref('')
 onMounted(async () => {
   await renderTossWidget()
+  const oid = router.currentRoute.value.query?.oid as string
   const payload = router.currentRoute.value.query?.data as string
-  if (payload) {
+  if (payload && oid) {
     const data = decodeCheckout(payload)
+    orderId.value = oid
     if (data && authStore.user!.id === data.userId) {
       console.log(data)
       const res = await productSvc.listCheckoutProduct(
@@ -159,16 +188,44 @@ async function renderTossWidget() {
 
 async function initPayment() {
   if (!widget) return
-  console.log(shipSelect.value)
-  console.log('total: ', grandTotal.value + 3000)
-  const foo = await txSvc.initPaymentTx(grandTotal.value + 3000)
-  console.log(foo)
+  if (!validateInput()) return
+  if (!orderId.value) {
+    await router.push('/error')
+    window.location.reload()
+  }
   await widget.setAmount({
     currency: 'KRW',
     value: grandTotal.value + 3000,
   })
+  // 결제 시도요청 (사전데이터 생성)
+  await txSvc.initPaymentTx({
+    products: products.value.map((itm) => ({
+      item: itm.product,
+      quantity: itm.count,
+    })),
+    payment: {
+      orderId: orderId.value!,
+      paidAmount: grandTotal.value + 3000,
+      paidAt: new Date(),
+    },
+    txName: txName.value,
+    txNote: txNote.value,
+  })
+  // 배송정보 등록
+  await shipSvc.registerShipment({
+    orderId: orderId.value!,
+    address: `${shipment.value.addr1}###${shipment.value.addr2}`,
+    postalCode: shipment.value.postalCode,
+    recipientName: authStore.user!.branchManager,
+    recipientPhone: authStore.user!.branchContact,
+  })
+  // 카트 비우기
+  const productIds = products.value.map((itm) => itm.product.id).filter((id) => id > 0)
+  if (productIds.length > 0) {
+    await productSvc.removeFromCart(productIds)
+  }
   await widget.requestPayment({
-    orderId: foo.sessionId,
+    orderId: orderId.value!,
     orderName: '주문명',
     successUrl: window.location.origin + '/item/checkout/process',
     failUrl: window.location.origin + '/item/checkout/fail',
@@ -180,10 +237,19 @@ function openPostcodeModal() {
   if (isCustom.value) {
     new window.daum.Postcode({
       oncomplete: function (data: any) {
-        console.log(data)
+        shipment.value.addr1 = data.address
+        shipment.value.postalCode = data.zonecode
       },
     }).open()
   }
+}
+
+function validateInput() {
+  if (!shipment.value.addr1 || !shipment.value.addr2) {
+    alert('배송지 주소를 입력해주세요.')
+    return false
+  }
+  return true
 }
 </script>
 <style scoped>
