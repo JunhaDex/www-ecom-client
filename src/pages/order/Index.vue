@@ -3,41 +3,10 @@
     <section class="order-list">
       <h2>주문내역</h2>
       <div class="section">
-        <div class="order-day">
-          <h3 class="text-lg font-semibold">2024-10-10</h3>
+        <div v-for="dt in txDates" class="order-day" :key="dt">
+          <h3 class="text-lg font-semibold">{{ dt }}</h3>
           <hr />
-          <ProductListItem>
-            <div class="order-action my-4">
-              <button class="btn btn-primary">주문 상세</button>
-              <button class="btn btn-secondary">영수증 보기</button>
-              <button class="btn btn-danger">주문취소</button>
-            </div>
-          </ProductListItem>
-          <ProductListItem>
-            <div class="order-action my-4">
-              <button class="btn btn-primary">주문 상세</button>
-              <button class="btn btn-secondary">영수증 보기</button>
-              <button class="btn btn-danger">주문취소</button>
-            </div>
-          </ProductListItem>
-        </div>
-        <div class="order-day">
-          <h3 class="text-lg font-semibold">2024-9-25</h3>
-          <hr />
-          <ProductListItem>
-            <div class="order-action my-4">
-              <button class="btn btn-primary">주문 상세</button>
-              <button class="btn btn-secondary">영수증 보기</button>
-              <button class="btn btn-danger">주문취소</button>
-            </div>
-          </ProductListItem>
-          <ProductListItem>
-            <div class="order-action my-4">
-              <button class="btn btn-primary">주문 상세</button>
-              <button class="btn btn-secondary">영수증 보기</button>
-              <button class="btn btn-danger">주문취소</button>
-            </div>
-          </ProductListItem>
+          <TxListItemUi v-for="(pd, i) in txList[dt]" :key="`${dt}-${i}`" :tx="pd" />
         </div>
       </div>
     </section>
@@ -45,7 +14,41 @@
 </template>
 <script setup lang="ts">
 import ContentLayout from '@/components/layouts/ContentLayout.vue'
-import ProductListItem from '@/components/ProductListItem.vue'
+import TxListItemUi from '@/components/TxListItem.vue'
+import { computed, onMounted, ref } from 'vue'
+import type { TxListItem, TxListItemGroup } from '@/types/service.type'
+import type { PageMeta } from '@/types/ui.type'
+import { TransactionService } from '@/services/transaction.service'
+
+const txSvc = new TransactionService()
+
+const txList = ref<TxListItemGroup>({})
+const txPageMeta = ref<PageMeta>({
+  totalCount: 0,
+  pageNo: 1,
+  pageSize: 10,
+  totalPage: 10,
+})
+
+const txDates = computed(() => Object.keys(txList.value))
+
+onMounted(async () => {
+  const txPaginated = await txSvc.listTx()
+  sortTxListByDate(txPaginated.list)
+  console.log(txList.value)
+  txPageMeta.value = txPaginated.meta
+})
+
+function sortTxListByDate(unsorted: TxListItem[]) {
+  unsorted.forEach((tx: TxListItem) => {
+    const txDate = tx.createdAt
+    if (txList.value[txDate] === undefined) {
+      txList.value[txDate] = [tx]
+    } else {
+      txList.value[txDate].push(tx)
+    }
+  })
+}
 </script>
 <style scoped>
 .order-action {

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Table Example</title>
+  <style>
+      /* Container styles */
+      .wrapper {
+          padding: 4rem;
+      }
+
+      /* Data table styles */
+      .data-table {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+          width: 100%; /* Changed from width: auto */
+          border-collapse: collapse;
+          margin-bottom: 1rem;
+      }
+
+      /* Make the table fill the container */
+      .data-table table {
+          width: 100%;
+          min-width: 100%;
+      }
+
+      /* When content is wider than container, allow table to expand */
+      .data-table table {
+          width: max-content;
+          min-width: 100%;
+      }
+
+      .data-table::-webkit-scrollbar {
+          height: 8px;
+      }
+
+      .data-table::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 4px;
+      }
+
+      .data-table::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 4px;
+      }
+
+      .data-table::-webkit-scrollbar-thumb:hover {
+          background: #555;
+      }
+
+      .data-table th,
+      .data-table td {
+          padding: 0.75rem;
+          border: 1px solid #ddd;
+      }
+
+      .data-table th {
+          background-color: #f8f9fa;
+          font-weight: 600;
+      }
+
+      .data-table tr:nth-child(even) {
+          background-color: #f8f9fa;
+      }
+
+      .data-table tr:hover {
+          background-color: #f2f2f2;
+      }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- Example with less data (will expand to 100%) -->
+  <h2>Table with Less Data</h2>
+  <div class="data-table">
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>001</td>
+        <td>Wireless Headphones</td>
+        <td>$129.99</td>
+        <td>In Stock</td>
+      </tr>
+      <tr>
+        <td>002</td>
+        <td>Smart Watch Pro</td>
+        <td>$299.99</td>
+        <td>Low Stock</td>
+      </tr>
+      <tr>
+        <td>003</td>
+        <td>4K Monitor</td>
+        <td>$449.99</td>
+        <td>In Stock</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Example with more data (will scroll horizontally) -->
+  <h2>Table with More Data</h2>
+  <div class="data-table">
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Last Updated</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Manufacturer</th>
+        <th>SKU</th>
+        <th>Weight (kg)</th>
+        <th>Dimensions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>001</td>
+        <td>Wireless Headphones</td>
+        <td>Electronics</td>
+        <td>$129.99</td>
+        <td>45</td>
+        <td>2025-01-29</td>
+        <td>In Stock</td>
+        <td>Noise cancelling bluetooth headphones</td>
+        <td>SoundTech</td>
+        <td>ST-WH-001</td>
+        <td>0.3</td>
+        <td>20 x 15 x 8 cm</td>
+      </tr>
+      <tr>
+        <td>002</td>
+        <td>Smart Watch Pro</td>
+        <td>Wearables</td>
+        <td>$299.99</td>
+        <td>28</td>
+        <td>2025-01-28</td>
+        <td>Low Stock</td>
+        <td>Advanced fitness tracking smartwatch</td>
+        <td>TechWear</td>
+        <td>TW-SW-002</td>
+        <td>0.05</td>
+        <td>4.2 x 4.2 x 1.1 cm</td>
+      </tr>
+      <tr>
+        <td>003</td>
+        <td>4K Monitor</td>
+        <td>Computers</td>
+        <td>$449.99</td>
+        <td>15</td>
+        <td>2025-01-27</td>
+        <td>In Stock</td>
+        <td>32-inch 4K LED Monitor</td>
+        <td>VisualTech</td>
+        <td>VT-MON-003</td>
+        <td>4.5</td>
+        <td>71.5 x 42.3 x 18.7 cm</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
