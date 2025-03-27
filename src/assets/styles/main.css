@@ -64,3 +64,49 @@ section {
         box-shadow: none;
     }
 }
+
+.dropdown {
+    &-wrap {
+        position: relative;
+        display: inline-block;
+    }
+
+    &-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 100;
+        display: none;
+        min-width: 164px;
+        width: fit-content;
+        background: white;
+        border-radius: theme('borderRadius.lg');
+        box-shadow: theme('boxShadow.md');
+        padding: theme('spacing.4');
+        overflow-y: auto;
+        max-height: 0;
+        transition: all 0.15s ease;
+
+        &.show {
+            display: block;
+            max-height: 200px;
+        }
+    }
+
+    &-item {
+        padding: 0.5rem 1rem;
+        border-radius: theme('borderRadius.md');
+        text-wrap: nowrap;
+        user-select: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background-color: theme('colors.gray.100');
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}

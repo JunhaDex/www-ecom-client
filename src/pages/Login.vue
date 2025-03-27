@@ -1,8 +1,9 @@
 <template>
   <AuthLayout>
     <div class="box box-login">
-      <h1>Welcome Back</h1>
-      <form @submit="submitLogin">
+      <img class="logo-login" src="@/assets/images/choi_logo.png" alt="logo" />
+      <h1 class="text-xl font-bold text-center my-4">가맹점 도구</h1>
+      <form @submit.prevent="submitLogin">
         <div class="input-wrap mb-4">
           <label class="label label-lt" for="email">사용자 계정</label>
           <input v-model="loginInput.userId" class="input" id="userid-input" />
@@ -32,12 +33,22 @@ const userSvc = new UserService()
 
 async function submitLogin(e: Event) {
   e.preventDefault()
-  await userSvc.login(loginInput.value)
-  router.push({ name: 'home' })
+  try {
+    await userSvc.login(loginInput.value)
+    router.push({ name: 'home' })
+  } catch (e) {
+    window.alert('계정 정보가 올바르지 않습니다.')
+  }
 }
 </script>
 <style scoped>
 .box-login {
   width: 320px;
+}
+
+.logo-login {
+  width: 240px;
+  height: 63px;
+  margin: 0 auto;
 }
 </style>

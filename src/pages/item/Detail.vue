@@ -2,9 +2,9 @@
   <DetailLayout page-title="상품상세">
     <section class="item-image">
       <Carousel v-bind="config">
-        <Slide v-for="slide in 10" :key="slide">
+        <Slide v-for="slide in product.imageUrls" :key="slide">
           <div class="carousel__item mb-2">
-            <img src="https://via.placeholder.com/512" alt="상품 이미지" />
+            <img :src="slide" alt="상품 이미지" />
           </div>
         </Slide>
         <template #addons>
@@ -70,7 +70,7 @@ async function accessProduct(id: number) {
   try {
     product.value = await productSvc.getProduct(id)
     product.value.imageUrls = product.value.imageUrls || []
-  } catch (e) {
+  } catch (e: any) {
     console.error(e)
     if (e.status === 403) {
       alert('해당 지역에 제공되지 않는 상품입니다.')

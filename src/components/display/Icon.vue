@@ -8,7 +8,7 @@ const props = defineProps<{
   icon?: string
 }>()
 const iconStyle = computed(() => ({
-  '--icon-url': props.icon ? `url(${props.icon})` : 'none',
+  '--icon-url': props.icon ? `url("${props.icon}")` : 'none',
 }))
 </script>
 <style scoped>

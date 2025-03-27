@@ -4,9 +4,18 @@
       <h2>장바구니</h2>
       <table class="cart-table mb-4">
         <tbody>
+          <tr v-if="cartList.list.length === 0">
+            <td>
+              <div class="cart-empty">
+                <h2>장바구니가 비었습니다</h2>
+              </div>
+            </td>
+          </tr>
           <tr v-for="(item, idx) in cartList.list" :key="item.id">
-            <td class="p-2 product-list">
-              <ProductListItem :product="item.product" />
+            <td class="w-full">
+              <div class="p-2 product-list">
+                <ProductListItem :product="item.product" />
+              </div>
             </td>
             <td class="p-2 count-column">
               <CounterInput
@@ -32,11 +41,11 @@
         </li>
         <li>
           <label>배송비</label>
-          <span>3,000 원</span>
+          <span>0 원</span>
         </li>
         <li>
           <label>주문 총액</label>
-          <span>{{ localizePrice(grandTotal + 3000) }} 원</span>
+          <span>{{ localizePrice(grandTotal) }} 원</span>
         </li>
       </ul>
       <button class="btn btn-primary w-full" @click="checkoutItem">주문하기</button>
@@ -114,12 +123,23 @@ async function updateCount(idx: number, count: number) {
 }
 </script>
 <style scoped>
+.cart-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #666;
+}
+
 .cart-table {
   width: 100%;
   border-collapse: collapse;
 
   .product-list {
     width: 100%;
+    min-height: 240px;
   }
 
   .counter {

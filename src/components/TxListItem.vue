@@ -1,6 +1,6 @@
 <template>
   <div class="tx-list-item mb-2">
-    <img src="https://via.placeholder.com/108" alt="상품 이미지" />
+    <img :src="prodImage" alt="상품 이미지" />
     <div class="product-info ml-4">
       <div class="product-info-header mb-2">
         <h3 class="text-lg font-semibold mb-2">{{ tx.txName }}</h3>
@@ -47,6 +47,7 @@ const props = defineProps<{
 
 const txSvc = new TransactionService()
 const router = useRouter()
+const prodImage = computed(() => props.tx.products[0].product.imageUrls[0])
 const itemCount = computed(() => props.tx.products.reduce((acc, cur) => acc + cur.count, 0))
 const paidAt = computed(() => dayjs(props.tx.payment.createdAt).format('YYYY-MM-DD HH:mm:ss'))
 const priceStr = computed(() => localizePrice(props.tx.payment.paidAmount))

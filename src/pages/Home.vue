@@ -1,11 +1,29 @@
 <template>
   <ContentLayout>
     <section class="dashboard">
+      <div class="mb-4">
+        <img class="logo-home" src="@/assets/images/choi_logo.png" alt="logo" />
+      </div>
       <div class="user-info mb-4">
         <h1 class="text-3xl font-extrabold">{{ authStore.user?.branchName ?? '지점명' }}</h1>
-        <button class="btn btn-ghost">
-          <Icon :icon="SettingIcon" />
-        </button>
+        <div
+          class="dropdown-wrap"
+          tabindex="1"
+          @click="() => (isSetting = !isSetting)"
+          @blur="() => (isSetting = false)"
+        >
+          <button class="btn btn-ghost">
+            <Icon :icon="SettingIcon" />
+          </button>
+          <ul class="dropdown-menu" :class="{ show: isSetting }">
+            <li class="dropdown-item">
+              <span>비밀번호 초기화</span>
+            </li>
+            <li class="dropdown-item" @click="logout">
+              <span>로그아웃</span>
+            </li>
+          </ul>
+        </div>
       </div>
       <ul class="box stats">
         <li>
@@ -72,12 +90,15 @@ import { TransactionService } from '@/services/transaction.service'
 import { NoticeService } from '@/services/notice.service'
 import { ProductService } from '@/services/product.service'
 import { useAuthStore } from '@/stores/auth.store'
-import { summarizeContent, tts } from '../utils/index.util'
+import { summarizeContent, tts } from '@/utils/index.util'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const txSvc = new TransactionService()
 const noticeSvc = new NoticeService()
 const productSvc = new ProductService()
+const isSetting = ref(false)
 const dashInfo = ref<Dashboard>({
   count: 0,
   cost: 0,
@@ -102,8 +123,18 @@ onMounted(async () => {
   noticeList.value = res.list
   productPage.value = await productSvc.listProduct()
 })
+
+function logout() {
+  window.alert('로그아웃 되었습니다.')
+  authStore.invalidate()
+  router.replace('/login')
+}
 </script>
 <style scoped>
+.logo-home {
+  width: 180px;
+}
+
 .dashboard {
   background-color: theme('colors.gray.100');
 }

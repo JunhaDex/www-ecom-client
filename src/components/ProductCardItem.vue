@@ -1,7 +1,7 @@
 <template>
   <div class="card-item-box">
     <router-link :to="`/item/${product.id}`" class="card-item-image">
-      <img src="https://via.placeholder.com/150" alt="상품 이미지" />
+      <img :src="image" alt="상품 이미지" />
     </router-link>
     <div class="card-item-content mt-4">
       <router-link :to="`/item/${product.id}`">
@@ -20,7 +20,7 @@ import { localizePrice } from '@/utils/index.util'
 const props = defineProps<{
   product: Product
 }>()
-
+const image = computed(() => props.product.imageUrls[0])
 const priceStr = computed(() => localizePrice(props.product.productPrice))
 </script>
 <style scoped>
