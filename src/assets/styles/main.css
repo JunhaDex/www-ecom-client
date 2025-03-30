@@ -1,0 +1,112 @@
+@import "reset.css";
+@import "variable.css";
+@import "base.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    .safe-area {
+        width: 100%;
+        max-width: 1440px;
+        margin: auto;
+    }
+
+    .bottom-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .top-fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+    }
+
+    .section {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1rem;
+
+        &-responsive {
+            @screen sm {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    }
+}
+
+section {
+    padding: theme('spacing.6');
+
+    h2 {
+        font-size: theme('fontSize.xl');
+        font-weight: theme('fontWeight.bold');
+        margin-bottom: theme('spacing.4');
+    }
+}
+
+.box {
+    background: white;
+    padding: theme('spacing.4');
+    border-radius: theme('borderRadius.lg');
+    box-shadow: theme('boxShadow.md');
+    width: 100%;
+
+    &-border {
+        border: 2px solid theme('colors.gray.100');
+        box-shadow: none;
+    }
+}
+
+.dropdown {
+    &-wrap {
+        position: relative;
+        display: inline-block;
+    }
+
+    &-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 100;
+        display: none;
+        min-width: 164px;
+        width: fit-content;
+        background: white;
+        border-radius: theme('borderRadius.lg');
+        box-shadow: theme('boxShadow.md');
+        padding: theme('spacing.4');
+        overflow-y: auto;
+        max-height: 0;
+        transition: all 0.15s ease;
+
+        &.show {
+            display: block;
+            max-height: 200px;
+        }
+    }
+
+    &-item {
+        padding: 0.5rem 1rem;
+        border-radius: theme('borderRadius.md');
+        text-wrap: nowrap;
+        user-select: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background-color: theme('colors.gray.100');
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+    }
+}
