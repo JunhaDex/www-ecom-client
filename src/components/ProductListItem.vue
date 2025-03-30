@@ -30,9 +30,13 @@ const priceStr = computed(() => localizePrice(props.product.productPrice))
   align-items: center;
 
   img {
+    display: none;
     width: 108px;
     height: 108px;
     border-radius: theme('borderRadius.sm');
+    @media (min-width: 376px) {
+      display: block;
+    }
   }
 
   .product-info {

@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { User } from '@/types/service.type'
+import CryptoJS from 'crypto-js'
 
+const SECRET_KEY = import.meta.env.VITE_SERIALIZE_KEY
 export const useAuthStore = defineStore(
   'auth',
   () => {
@@ -31,5 +33,20 @@ export const useAuthStore = defineStore(
 
     return { state, user, address, isAuthenticated, setCredential, invalidate }
   },
-  { persist: true },
+  {
+    persist: {
+      key: 'auth',
+      storage: localStorage,
+      serializer: {
+        serialize: (state) => {
+          const jsonStr = JSON.stringify(state)
+          return CryptoJS.AES.encrypt(jsonStr, SECRET_KEY).toString()
+        },
+        deserialize: (state) => {
+          const decrypted = CryptoJS.AES.decrypt(state, SECRET_KEY).toString(CryptoJS.enc.Utf8)
+          return JSON.parse(decrypted)
+        },
+      },
+    },
+  },
 )

@@ -79,7 +79,7 @@
   </ContentLayout>
   <Modal :is-open="isModalOpen" @close-modal="resetInput">
     <div class="dialog-modal">
-      <h2 class="text-xl font-semibold   mb-4">비밀번호 변경하기</h2>
+      <h2 class="text-xl font-semibold mb-4">비밀번호 변경하기</h2>
       <form @submit.prevent="updatePwd">
         <div class="input-wrap address mb-4">
           <label class="label label-lt">기존 비밀번호</label>
@@ -138,7 +138,7 @@ const dashInfo = ref<Dashboard>({
 })
 
 const noticeList = ref<Notice[]>([])
-const { isModalOpen, userInput, submitChange, resetInput } = useChangePwd()
+const { isModalOpen, userInput, resetInput } = useChangePwd()
 const productPage = ref<PaginatedResponse<Product>>({
   list: [],
   meta: {
@@ -239,6 +239,11 @@ async function updatePwd() {
     }
 
     .notice-item-content {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-wrap: pretty;
       color: #666;
       font-size: 0.875rem;
     }

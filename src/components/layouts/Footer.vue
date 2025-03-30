@@ -1,6 +1,6 @@
 <template>
   <footer class="app-footer">
-    <p class="text-sm">
+    <p class="text-xs">
       주식회사 최선생 | 대표: 최종길 | 사업자등록번호: 331-87-01961 <br />
       주소: 경기도 포천시 가산면 메나리길 110-29 <br />
       Copyright &copy; 주식회사 최선생. All Rights Reserved.

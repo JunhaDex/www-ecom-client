@@ -2,22 +2,14 @@
   <ContentLayout>
     <section class="cart-list">
       <h2>장바구니</h2>
-      <table class="cart-table mb-4">
-        <tbody>
-          <tr v-if="cartList.list.length === 0">
-            <td>
-              <div class="cart-empty">
-                <h2>장바구니가 비었습니다</h2>
-              </div>
-            </td>
-          </tr>
-          <tr v-for="(item, idx) in cartList.list" :key="item.id">
-            <td class="w-full">
-              <div class="p-2 product-list">
-                <ProductListItem :product="item.product" />
-              </div>
-            </td>
-            <td class="p-2 count-column">
+      <div class="cart-table mb-4">
+        <div v-if="cartList.list.length === 0" class="cart-empty">
+          <h2>장바구니가 비었습니다</h2>
+        </div>
+        <div v-for="(item, idx) in cartList.list" :key="item.id" class="cart-list-item">
+          <div class="p-2 product-list">
+            <ProductListItem :product="item.product" />
+            <div class="to-right">
               <CounterInput
                 class="counter"
                 :value="item.count"
@@ -30,10 +22,10 @@
                 </div>
                 <button class="btn btn-danger btn-sm" @click="updateCount(idx, 0)">삭제</button>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+          </div>
+        </div>
+      </div>
       <ul class="checkout mb-2">
         <li>
           <label>총 상품금액</label>
@@ -131,6 +123,21 @@ async function updateCount(idx: number, count: number) {
   font-size: 1.25em;
   font-weight: bold;
   color: #666;
+}
+
+.product-list {
+  display: block;
+  @media (min-width: 480px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.to-right {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 
 .cart-table {

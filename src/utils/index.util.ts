@@ -16,7 +16,7 @@ export function tts(time: Date | string): string {
   else return local.format('MM월DD일 HH:mm')
 }
 
-export function summarizeContent(htmlContent: string, length = 20): string {
+export function summarizeContent(htmlContent: string): string {
   const parser = new DOMParser()
   const doc = parser.parseFromString(htmlContent, 'text/html')
   const text = doc.getElementsByTagName('p')
@@ -24,10 +24,8 @@ export function summarizeContent(htmlContent: string, length = 20): string {
   let summary = ''
   for (const p of Array.from(text)) {
     const len = p.innerText.length
-    const size = Math.min(len, length - summary.length + 1)
-    summary += p.innerText.slice(0, size)
+    summary += p.innerText.slice(0, len)
     summary += ' '
-    if (summary.length >= length) break
   }
 
   return summary
@@ -55,4 +53,23 @@ export function decodeCheckout(encrypted: string) {
   const pure = decodeURIComponent(encrypted)
   const dec = crypto.AES.decrypt(pure, ENCRYPTION_KEY).toString(crypto.enc.Utf8)
   return JSON.parse(dec)
+}
+
+export function getTxStatus(status: number): string {
+  switch (status) {
+    case 1:
+      return '결제완료'
+    case 2:
+      return '결제대기'
+    case 3:
+      return '배송중'
+    case 4:
+      return '배송완료'
+    case 5:
+      return '환불처리'
+    case 7:
+      return '거래취소'
+    default:
+      return '알 수 없음'
+  }
 }

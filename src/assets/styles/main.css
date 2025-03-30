@@ -110,3 +110,13 @@ section {
         }
     }
 }
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: theme('borderRadius.md');
+    background-color: theme('colors.gray.100');
+    color: theme('colors.gray.800');
+    font-size: theme('fontSize.xs');
+    font-weight: theme('fontWeight.bold');
+}

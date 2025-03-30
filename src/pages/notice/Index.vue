@@ -110,6 +110,11 @@ async function loadPage(pageNo: number) {
     }
 
     .notice-item-content {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-wrap: pretty;
       color: #666;
       font-size: 0.875rem;
     }
