@@ -29,7 +29,7 @@ coverage
 
 *.tsbuildinfo
 
-# environments & secrets
+# secret
 .env
 *.env
 */secret

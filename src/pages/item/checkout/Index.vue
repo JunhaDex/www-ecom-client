@@ -215,7 +215,7 @@ async function initPayment() {
   }
   await widget.setAmount({
     currency: 'KRW',
-    value: grandTotal.value + 3000,
+    value: grandTotal.value,
   })
   // 결제 시도요청 (사전데이터 생성)
   await txSvc.initPaymentTx({
@@ -225,7 +225,7 @@ async function initPayment() {
     })),
     payment: {
       orderId: orderId.value!,
-      paidAmount: grandTotal.value + 3000,
+      paidAmount: grandTotal.value,
       paidAt: new Date(),
     },
     txName: txName.value,
